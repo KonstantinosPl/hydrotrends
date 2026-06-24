@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.pyc
+config.py
+main.py
+
+# IDE
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Project data
+data/
+outputs/
+notebooks/
+
+# QGIS
+*.qgz
+*.qgs
+
+# Raster data
+*.tif
+*.tiff
+*.nc
+*.grib
+
+# Vector data
+*.gpkg
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.geojson
+*.kml
+
+# Tables
+*.xlsx
+*.xls
+
+# Operating system
+.DS_Store
+Thumbs.db
+
