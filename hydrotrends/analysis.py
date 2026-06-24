@@ -78,7 +78,7 @@ def compute_daily_stats_by_polygon(input_folder_path, shapefile_path, output_dir
     return
 
 
-def estimate_mean_per_polygon_from_monthly_file(input_file, shapefile_path, output_folder):
+def aggregate_monthly(input_file, shapefile_path, output_folder):
     xa.set_options(silent=True)
 
     shapefile = gpd.read_file(shapefile_path)
