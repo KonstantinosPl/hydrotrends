@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from src.io.excel import save_monthly_excel
-from src.climatology.seasons import MONTHS
+from hydrotrends.io.excel import save_monthly_excel
+from hydrotrends.climatology.seasons import MONTHS
 
 def temperature_extreme_indices(input_file_path, output_dir):
     os.makedirs(output_dir, exist_ok=True)

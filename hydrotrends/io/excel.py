@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.climatology.seasons import MONTHS
+from hydrotrends.climatology.seasons import MONTHS
 
 def save_annual_excel(df, value_col, output_path):
     annual_wide = df.pivot(
