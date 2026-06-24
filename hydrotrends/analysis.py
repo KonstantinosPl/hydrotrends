@@ -15,7 +15,7 @@ from hydrotrends.aggregation.polygon_aggregation import apply_weightmap
 from hydrotrends.transforms.units import kelvin_to_celsius, m_to_mm
 from hydrotrends.io.excel import save_grouped_excel
 
-def compute_daily_stats_by_polygon(input_folder_path, shapefile_path, output_dir):
+def aggregate_daily(input_folder_path, shapefile_path, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     shapefile = gpd.read_file(shapefile_path)
