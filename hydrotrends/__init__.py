@@ -17,3 +17,7 @@ from hydrotrends.extreme_climate_indices.temperature import (
 from hydrotrends.extreme_climate_indices.precipitation import (
     precipitation_extreme_indices,
 )
+
+from hydrotrends.workflow import (
+    run_trend_workflow
+)
