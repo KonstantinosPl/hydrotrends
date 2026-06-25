@@ -25,5 +25,5 @@ from hydrotrends.workflows import (
 )
 
 from hydrotrends.aggregation.polygon_aggregation import (
-    create_weightmap_plots_from_grib
+    create_weightmap_plots
 )

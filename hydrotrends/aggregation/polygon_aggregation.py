@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import xagg as xa
 import geopandas as gpd
 
-from hydrotrends.io.grib import load_grib
+from hydrotrends.io.load import load_dataset
 
 def apply_weightmap(data_array, shapefile):
     xa.set_options(silent=True)
@@ -38,10 +38,10 @@ def save_weightmap_plots(weightmap, data_array, shapefile, output_folder):
         plt.close(fig)
     return
 
-def create_weightmap_plots_from_grib(grib_path, shapefile_path, save_plots=False, plot_output_dir=None):
+def create_weightmap_plots(filepath, shapefile_path, save_plots=False, plot_output_dir=None):
 
     polygons = gpd.read_file(shapefile_path)
-    _, data_array = load_grib(grib_path)
+    _, data_array = load_dataset(filepath)
     overlay, weightmap = apply_weightmap(data_array, polygons)
     
     if save_plots:
