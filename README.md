@@ -24,5 +24,8 @@ run_trend_workflow(
     variable_paths=variable_paths,
     shapefiles=shapefiles,
     output_dir="outputs",
+    modes=("monthly", "seasonal", "annual"),
+    time_dim="valid_time",
+    unit_conversions=unit_conversion
 )
 ```
