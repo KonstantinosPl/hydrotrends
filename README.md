@@ -90,12 +90,13 @@ run_trend_workflow(
 ### `run_trend_workflow()`
 
 Performs spatial aggregation, temporal aggregation, and non-parametric trend analysis for gridded climate datasets.
+For every polygon contained in the input GeoPackage (or shapefile), HydroTrends automatically generates:
 
 **Outputs**
 
-- Monthly aggregated time series (`.xlsx`)
-- Seasonal aggregated time series (`.xlsx`)
-- Annual aggregated time series (`.xlsx`)
+- Monthly Excel tables (years × months)
+- Seasonal Excel tables (years × seasons)
+- Annual Excel tables (years)
 - Monthly Mann–Kendall trend statistics (`.csv`, `.gpkg`)
 - Seasonal Mann–Kendall trend statistics (`.csv`, `.gpkg`)
 - Annual Mann–Kendall trend statistics (`.csv`, `.gpkg`)
