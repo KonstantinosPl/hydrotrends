@@ -12,11 +12,10 @@ import pymannkendall as mk
 
 from hydrotrends.climatology.seasons import MONTHS, SEASONS, SEASONS_ORDER
 from hydrotrends.aggregation.polygon_aggregation import apply_weightmap
-from hydrotrends.conversions.units import kelvin_to_celsius, m_to_mm
 from hydrotrends.io.excel import save_grouped_excel
 from hydrotrends.io.load import load_dataset
 
-def aggregate_daily(input_folder_path, shapefile_path, output_dir):
+def aggregate_daily(input_folder_path, shapefile_path, output_dir, time_dim=None, unit_conversions=None):
     input_folder_path = Path(input_folder_path)
     output_dir = Path(output_dir)
 
@@ -45,7 +44,7 @@ def aggregate_daily(input_folder_path, shapefile_path, output_dir):
             daily = (
                 poly_data
                 .groupby("name")
-                .resample("1D", on="valid_time")[var_name]
+                .resample("1D", on=time_dim)[var_name]
                 .agg(
                     t2m_mean="mean",
                     t2m_max="max",
@@ -54,12 +53,15 @@ def aggregate_daily(input_folder_path, shapefile_path, output_dir):
                 .reset_index()
             )
 
-            daily[["t2m_mean", "t2m_max", "t2m_min"]] = kelvin_to_celsius(daily[["t2m_mean", "t2m_max", "t2m_min"]])
-            results.append(daily)
+            if unit_conversions is not None and var_name in unit_conversions:
+                for col in ["t2m_mean", "t2m_max", "t2m_min"]:
+                    daily[col] = unit_conversions[var_name](daily[col])
 
         elif var_name == "tp":
             daily = poly_data.copy()
-            daily["tp"] = m_to_mm(daily["tp"])
+            
+            if unit_conversions is not None and var_name in unit_conversions:
+                daily[var_name] = unit_conversions[var_name](daily[var_name])
 
         else:
             raise ValueError(

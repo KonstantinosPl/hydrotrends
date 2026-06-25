@@ -72,6 +72,9 @@ def run_temperature_indices_workflow(
     shapefiles,
     output_dir,
     calculate_trends=True,
+    time_dim=None,
+    unit_conversions=None
+
 ):
     output_dir = Path(output_dir)
 
@@ -83,6 +86,8 @@ def run_temperature_indices_workflow(
             input_folder_path=input_folder,
             shapefile_path=shapefile_path,
             output_dir=region_output_dir,
+            time_dim=time_dim,
+            unit_conversions=unit_conversions
         )
 
         temperature_extreme_indices(
@@ -108,6 +113,8 @@ def run_precipitation_indices_workflow(
     shapefiles,
     output_dir,
     calculate_trends=True,
+    time_dim=None,
+    unit_conversions=None
 ):
     output_dir = Path(output_dir)
 
@@ -119,6 +126,8 @@ def run_precipitation_indices_workflow(
             input_folder_path=input_folder,
             shapefile_path=shapefile_path,
             output_dir=region_output_dir,
+            time_dim=time_dim,
+            unit_conversions=unit_conversions
         )
 
         precipitation_extreme_indices(
