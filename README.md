@@ -12,6 +12,13 @@ variable_paths = [
     precipitation_monthly_path,
     temperature_monthly_path,
 ]
+shapefiles = {
+    "water_districts": water_districts_path,
+    "basins": basins_path
+}
+unit_conversion = {
+    "t2m": kelvin_to_celsius
+}
 
 run_trend_workflow(
     variable_paths=variable_paths,
