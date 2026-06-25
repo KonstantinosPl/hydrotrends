@@ -14,14 +14,19 @@ from hydrotrends.climatology.seasons import MONTHS, SEASONS, SEASONS_ORDER
 from hydrotrends.aggregation.polygon_aggregation import apply_weightmap
 from hydrotrends.transforms.units import kelvin_to_celsius, m_to_mm
 from hydrotrends.io.excel import save_grouped_excel
+from hydrotrends.io.load import load_dataset
 
 def aggregate_daily(input_folder_path, shapefile_path, output_dir):
-    os.makedirs(output_dir, exist_ok=True)
+    input_folder_path = Path(input_folder_path)
+    output_dir = Path(output_dir)
+
+    files = sorted(input_folder_path.glob("*.nc"))
+    if not files:
+        raise FileNotFoundError(f"No .nc files found in input folder: {input_folder_path}")
 
     shapefile = gpd.read_file(shapefile_path)
-    results = []
 
-    files = sorted(Path(input_folder_path).glob("*.nc"))
+    results = []
     
     ds_first = xr.open_dataset(files[0], engine="netcdf4")
     var_name = list(ds_first.data_vars)[0]
@@ -31,13 +36,10 @@ def aggregate_daily(input_folder_path, shapefile_path, output_dir):
 
     data_first.close()
 
-    for file in os.listdir(input_folder_path):
-        filepath = os.path.join(input_folder_path, file)
-
-        ds = xr.open_dataset(filepath)
-        data = ds[var_name]
-
-        poly_data = xa.aggregate(data, weightmap).to_dataframe().reset_index()
+    for file in files:
+        with xr.open_dataset(file, engine="netcdf4") as ds:
+            data = ds[var_name]
+            poly_data = xa.aggregate(data, weightmap).to_dataframe().reset_index()
         
         if var_name == "t2m":
             daily = (
@@ -52,49 +54,42 @@ def aggregate_daily(input_folder_path, shapefile_path, output_dir):
                 .reset_index()
             )
 
+            daily[["t2m_mean", "t2m_max", "t2m_min"]] = kelvin_to_celsius(daily[["t2m_mean", "t2m_max", "t2m_min"]])
             results.append(daily)
 
         elif var_name == "tp":
-            results.append(poly_data)
+            daily = poly_data.copy()
+            daily["tp"] = m_to_mm(daily["tp"])
 
-        ds.close()
+        else:
+            raise ValueError(
+                f"Unsupported variable '{var_name}'. " "aggregate_daily currently supports only 't2m' and 'tp'.")
 
+        results.append(daily)
+        
     daily_polygon_df = pd.concat(results, ignore_index=True)
     
-    if var_name == "t2m":
-        cols_to_convert = ["t2m_mean", "t2m_max", "t2m_min"]
-        daily_polygon_df[cols_to_convert] = kelvin_to_celsius(
-            daily_polygon_df[cols_to_convert]
-        )
+    output_folder = output_dir / f"{var_name}" / "daily"
+    output_folder.mkdir(parents=True, exist_ok=True)
 
-    elif var_name == "tp":
-        daily_polygon_df["tp"] = m_to_mm(daily_polygon_df["tp"])
+    output_path = output_folder / "daily_values.csv"
+    daily_polygon_df.to_csv(output_path, index=False)
 
-    output_folder = os.path.join(output_dir, f"{var_name}", "daily")
-    os.makedirs(output_folder, exist_ok=True)
-
-    daily_polygon_df.to_csv(os.path.join(output_folder, "daily_values.csv"), index=False)
-
-    return
+    return daily_polygon_df
 
 
 def aggregate_monthly(input_file, shapefile_path, output_folder):
     xa.set_options(silent=True)
 
+    output_folder = Path(output_folder)
+
     shapefile = gpd.read_file(shapefile_path)
 
-    ext = os.path.splitext(input_file)[1].lower()
-    if ext == ".nc":
-        data = xr.open_dataset(input_file, engine="netcdf4", decode_timedelta=True)
-    elif ext==".grib":
-        data = xr.open_dataset(input_file, engine="cfgrib", decode_timedelta=True)
-    else:
-        raise ValueError("Unsupported type of extension")
-    
-    var_name = list(data.data_vars)[0]  # Retrieve the variable name of the grib e.g. tp, t2m
-    data = data[var_name]
+    data, data_array = load_dataset(input_file)
 
-    overlay, _ = apply_weightmap(data, shapefile)
+    var_name = data_array.name  # Retrieve the variable name of the grib e.g. tp, t2m
+
+    overlay, _ = apply_weightmap(data_array, shapefile)
    
     mean_per_polygon_df = overlay.to_dataframe()
     
@@ -151,12 +146,14 @@ def aggregate_monthly(input_file, shapefile_path, output_folder):
     )
     seasonal_grouped = seasonal_grouped.sort_values(["name", "season_year", "season"])    
 
-    output_folder_monthly = os.path.join(output_folder, f"{var_name}", "monthly")
-    os.makedirs(output_folder_monthly, exist_ok=True)
-    output_folder_annual = os.path.join(output_folder, f"{var_name}", "annual")
-    os.makedirs(output_folder_annual, exist_ok=True)
-    output_folder_seasonal = os.path.join(output_folder, f"{var_name}", "seasonal")
-    os.makedirs(output_folder_seasonal, exist_ok=True)
+    output_folder_monthly = output_folder / var_name / "monthly"
+    output_folder_annual = output_folder / var_name / "annual"
+    output_folder_seasonal = output_folder / var_name / "seasonal"
+
+    output_folder_monthly.mkdir(parents=True, exist_ok=True)
+    output_folder_annual.mkdir(parents=True, exist_ok=True)
+    output_folder_seasonal.mkdir(parents=True, exist_ok=True)
+
 
     save_grouped_excel(
         df=monthly_grouped,
@@ -164,7 +161,7 @@ def aggregate_monthly(input_file, shapefile_path, output_folder):
         index_col="year",
         columns_col="month_name",
         values_col="monthly",
-        output_path=os.path.join(output_folder_monthly, f"monthly_{var_name}.xlsx"),
+        output_path=output_folder_monthly / f"monthly_{var_name}.xlsx",
         column_order=month_order,
     )
 
@@ -174,11 +171,11 @@ def aggregate_monthly(input_file, shapefile_path, output_folder):
         index_col="season_year",
         columns_col="season",
         values_col="seasonal",
-        output_path=os.path.join(output_folder_seasonal, f"seasonal_{var_name}.xlsx"),
+        output_path=output_folder_seasonal / f"seasonal_{var_name}.xlsx",
         column_order=SEASONS_ORDER,
     )
             
-    annual_wide.to_excel(os.path.join(output_folder_annual, f"annual_{var_name}.xlsx"))    
+    annual_wide.to_excel(output_folder_annual /f"annual_{var_name}.xlsx")   
     return var_name
 
 
