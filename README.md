@@ -144,3 +144,16 @@ Depending on the selected workflow, HydroTrends generates:
 - Climate extreme indices
 
 
+## Requirements
+
+To use the HydroTrends workflows, the input polygon layer (GeoPackage) must contain an attribute named **`name`**.
+
+This field is used to identify each polygon and is employed to:
+
+- Name output folders
+- Name Excel worksheets
+- Link trend statistics to the corresponding polygons
+- Label spatial outputs (GeoPackage)
+
+Each value in the `name` field should be unique.
+
