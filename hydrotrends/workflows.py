@@ -93,6 +93,7 @@ def run_temperature_indices_workflow(
         temperature_extreme_indices(
             input_file_path=indices_dir / "daily_values.csv",
             output_dir=indices_dir,
+            time_dim=time_dim
         )
 
         if calculate_trends:
@@ -133,6 +134,7 @@ def run_precipitation_indices_workflow(
         precipitation_extreme_indices(
             input_file_path=indices_dir / "daily_values.csv",
             output_dir=indices_dir,
+            time_dim=time_dim
         )
 
         if calculate_trends:

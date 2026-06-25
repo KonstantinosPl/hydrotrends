@@ -5,14 +5,14 @@ import pandas as pd
 from hydrotrends.io.excel import save_monthly_excel
 from hydrotrends.climatology.seasons import MONTHS
 
-def temperature_extreme_indices(input_file_path, output_dir):
+def temperature_extreme_indices(input_file_path, output_dir, time_dim=None):
     os.makedirs(output_dir, exist_ok=True)
 
     data = pd.read_csv(input_file_path)
     
-    data["valid_time"] = pd.to_datetime(data["valid_time"])
-    data["year"] = data["valid_time"].dt.year
-    data["month"] = data["valid_time"].dt.month
+    data[time_dim] = pd.to_datetime(data[time_dim])
+    data["year"] = data[time_dim].dt.year
+    data["month"] = data[time_dim].dt.month
     data["month_name"] = data["month"].map(MONTHS)
     
     data["SU_day"] = data["t2m_max"] > 25

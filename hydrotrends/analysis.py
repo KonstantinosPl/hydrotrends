@@ -15,6 +15,10 @@ from hydrotrends.aggregation.polygon_aggregation import apply_weightmap
 from hydrotrends.io.excel import save_grouped_excel
 from hydrotrends.io.load import load_dataset
 
+def _infer_time_step(df, time_dim):
+    time_values = pd.to_datetime(df[time_dim]).sort_values()
+    return time_values.diff().dropna().median()
+
 def aggregate_daily(input_folder_path, shapefile_path, output_dir, time_dim=None, unit_conversions=None):
     input_folder_path = Path(input_folder_path)
     output_dir = Path(output_dir)
@@ -40,7 +44,14 @@ def aggregate_daily(input_folder_path, shapefile_path, output_dir, time_dim=None
             data = ds[var_name]
             poly_data = xa.aggregate(data, weightmap).to_dataframe().reset_index()
         
+        time_step = _infer_time_step(poly_data, time_dim)
+
         if var_name == "t2m":
+            if time_step >= pd.Timedelta(days=1):
+                raise ValueError(
+                    "Input temperature data are daily. To compute temperature extreme indices, sub-daily data are required."
+                                 )
+             
             daily = (
                 poly_data
                 .groupby("name")
@@ -58,7 +69,17 @@ def aggregate_daily(input_folder_path, shapefile_path, output_dir, time_dim=None
                     daily[col] = unit_conversions[var_name](daily[col])
 
         elif var_name == "tp":
-            daily = poly_data.copy()
+            if time_step < pd.Timedelta(days=1):
+                daily = (
+                    poly_data
+                    .groupby("name")
+                    .resample("1D", on=time_dim)[var_name]
+                    .sum()
+                    .reset_index()
+                )
+                        
+            else:
+                daily = poly_data.copy()
             
             if unit_conversions is not None and var_name in unit_conversions:
                 daily[var_name] = unit_conversions[var_name](daily[var_name])

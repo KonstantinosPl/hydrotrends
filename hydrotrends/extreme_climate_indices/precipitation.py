@@ -5,15 +5,15 @@ import pandas as pd
 from hydrotrends.climatology.seasons import MONTHS
 from hydrotrends.io.excel import save_monthly_excel, save_annual_excel
 
-def precipitation_extreme_indices(input_file_path, output_dir):
+def precipitation_extreme_indices(input_file_path, output_dir, time_dim=None):
     data = pd.read_csv(input_file_path)
 
-    data["valid_time"] = pd.to_datetime(data["valid_time"])
-    data["year"] = data["valid_time"].dt.year
-    data["month"] = data["valid_time"].dt.month
+    data[time_dim] = pd.to_datetime(data[time_dim])
+    data["year"] = data[time_dim].dt.year
+    data["month"] = data[time_dim].dt.month
     data["month_name"] = data["month"].map(MONTHS)
 
-    data = data.sort_values(["name", "valid_time"]).reset_index(drop=True)
+    data = data.sort_values(["name", time_dim]).reset_index(drop=True)
 
     data["wet_day"] = data["tp"] >= 1
     data["dry_day"] = data["tp"] < 1
