@@ -47,7 +47,7 @@ ETCCDI-based Climate Extreme Indices:
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/hydrotrends.git
+git clone https://github.com/KonstantinosPL/hydrotrends.git
 cd hydrotrends
 ```
 
