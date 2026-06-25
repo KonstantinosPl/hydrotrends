@@ -23,3 +23,7 @@ from hydrotrends.workflows import (
     run_temperature_indices_workflow, 
     run_precipitation_indices_workflow
 )
+
+from hydrotrends.aggregation.polygon_aggregation import (
+    create_weightmap_plots_from_grib
+)

@@ -38,7 +38,7 @@ def save_weightmap_plots(weightmap, data_array, shapefile, output_folder):
         plt.close(fig)
     return
 
-def create_weightmap_from_grib(grib_path, shapefile_path, save_plots=False, plot_output_dir=None):
+def create_weightmap_plots_from_grib(grib_path, shapefile_path, save_plots=False, plot_output_dir=None):
 
     polygons = gpd.read_file(shapefile_path)
     _, data_array = load_grib(grib_path)
