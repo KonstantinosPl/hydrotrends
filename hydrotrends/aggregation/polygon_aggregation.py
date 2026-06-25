@@ -14,13 +14,10 @@ def apply_weightmap(data_array, shapefile):
     overlay = xa.aggregate(data_array, weightmap)
     return overlay, weightmap
 
-def apply_existing_weightmap(data_array, weightmap):
-    xa.set_options(silent=True)
-    return xa.aggregate(data_array, weightmap)
-
 def save_weightmap_plots(weightmap, data_array, shapefile, output_folder):
     output_folder_xagg = os.path.join(output_folder, "xagg_plots")
     os.makedirs(output_folder_xagg, exist_ok=True)
+    print("Saving plots to:", output_folder_xagg)
 
     for i, name in enumerate(shapefile["name"]):
         fig, _ = weightmap.diag_fig(i, data_array)
@@ -41,22 +38,13 @@ def save_weightmap_plots(weightmap, data_array, shapefile, output_folder):
         plt.close(fig)
     return
 
-def create_weightmap_from_grib(grib_path, shapefile_path, output_path, save_plots=False, plot_output_dir=None):
+def create_weightmap_from_grib(grib_path, shapefile_path, save_plots=False, plot_output_dir=None):
+
     polygons = gpd.read_file(shapefile_path)
     _, data_array = load_grib(grib_path)
     overlay, weightmap = apply_weightmap(data_array, polygons)
-
-    if output_path.exists():
-        raise FileExistsError(
-            f"{output_path} already exists"
-        )
-    
-    weightmap.to_file(output_path.as_posix(), overwrite=True)
     
     if save_plots:
-        if plot_output_dir is None:
-            plot_output_dir = output_path.parent
-
         save_weightmap_plots(
             weightmap,
             data_array,
