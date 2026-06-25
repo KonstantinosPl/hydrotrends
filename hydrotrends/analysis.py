@@ -78,7 +78,7 @@ def aggregate_daily(input_folder_path, shapefile_path, output_dir):
     return daily_polygon_df
 
 
-def aggregate_monthly(input_file, shapefile_path, output_folder):
+def aggregate_monthly(input_file, shapefile_path, output_folder, time_dim=None, unit_conversions=None):
     xa.set_options(silent=True)
 
     output_folder = Path(output_folder)
@@ -93,17 +93,16 @@ def aggregate_monthly(input_file, shapefile_path, output_folder):
    
     mean_per_polygon_df = overlay.to_dataframe()
     
-    if var_name == "t2m":
-        mean_per_polygon_df[var_name] = kelvin_to_celsius(mean_per_polygon_df[var_name])
-    elif var_name in ["tp"]: 
-        mean_per_polygon_df[var_name] = m_to_mm(mean_per_polygon_df[var_name])
+    if unit_conversions is not None and var_name in unit_conversions:
+        mean_per_polygon_df[var_name] = unit_conversions[var_name](
+            mean_per_polygon_df[var_name]
+        )
     
-
     monthly= mean_per_polygon_df.reset_index().drop("poly_idx", axis=1)
     
     monthly = monthly.assign(
-                year=monthly["time"].dt.year,
-                month=monthly["time"].dt.month)
+                year=monthly[time_dim].dt.year,
+                month=monthly[time_dim].dt.month)
     
     if var_name == "tp":
         agg_function = "sum"

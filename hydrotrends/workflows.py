@@ -9,6 +9,8 @@ def run_trend_workflow(
     shapefiles,
     output_dir,
     modes=("monthly", "seasonal", "annual"),
+    time_dim=None,
+    unit_conversions=None
 ):
     output_dir = Path(output_dir)
 
@@ -22,6 +24,8 @@ def run_trend_workflow(
                 input_file=input_file,
                 shapefile_path=shapefile_path,
                 output_folder=region_output_dir,
+                time_dim=time_dim,
+                unit_conversions=unit_conversions
             )
 
             for mode in modes:
