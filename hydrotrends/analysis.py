@@ -12,7 +12,7 @@ import pymannkendall as mk
 
 from hydrotrends.climatology.seasons import MONTHS, SEASONS, SEASONS_ORDER
 from hydrotrends.aggregation.polygon_aggregation import apply_weightmap
-from hydrotrends.transforms.units import kelvin_to_celsius, m_to_mm
+from hydrotrends.conversions.units import kelvin_to_celsius, m_to_mm
 from hydrotrends.io.excel import save_grouped_excel
 from hydrotrends.io.load import load_dataset
 
