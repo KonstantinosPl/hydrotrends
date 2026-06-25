@@ -21,21 +21,21 @@ The package is designed for reproducible hydroclimatic analyses at different spa
 ### Climate Indices
 ETCCDI-based Climate Extreme Indices:
 
-    **Temperature** 
-        - SU
-        - TXx
-        - TNx
-        - DTR
-    
-    **Precipitation**
-        - Rx1Day
-        - Rx5Day
-        - SDII
-        - R10mm
-        - R20mm
-        - CDD
-        - CWD
-        - PRCPTOT
+**Temperature** 
+  - SU
+  - TXx
+  - TNx
+  - DTR
+ 
+**Precipitation**
+  - Rx1Day
+  - Rx5Day
+  - SDII
+  - R10mm
+  - R20mm
+  - CDD
+  - CWD
+  - PRCPTOT
 
 ### Trend analysis
 - Mann Kendall Test
@@ -47,7 +47,7 @@ ETCCDI-based Climate Extreme Indices:
 Clone the repository:
 
 ```bash
-git clone https://github.com/KonstantinosPL/hydrotrends.git
+git clone https://github.com/KonstantinosPl/hydrotrends.git
 cd hydrotrends
 ```
 
@@ -56,8 +56,6 @@ Install the package:
 ```bash
 pip install -e .
 ```
-
-
 
 ## Example 
 
@@ -85,3 +83,63 @@ run_trend_workflow(
     unit_conversions=unit_conversion
 )
 ```
+
+
+## Workflows
+
+### `run_trend_workflow()`
+
+Performs spatial aggregation, temporal aggregation, and non-parametric trend analysis for gridded climate datasets.
+
+**Outputs**
+
+- Monthly aggregated time series (`.xlsx`)
+- Seasonal aggregated time series (`.xlsx`)
+- Annual aggregated time series (`.xlsx`)
+- Monthly Mann–Kendall trend statistics (`.csv`, `.gpkg`)
+- Seasonal Mann–Kendall trend statistics (`.csv`, `.gpkg`)
+- Annual Mann–Kendall trend statistics (`.csv`, `.gpkg`)
+
+---
+### `run_temperature_indices_workflow()`
+
+Computes ETCCDI temperature extreme indices from sub-daily temperature data.
+
+**Outputs**
+
+- Daily aggregated temperature (`.csv`)
+- SU (`.xlsx`)
+- TXx (`.xlsx`)
+- TNx (`.xlsx`)
+- DTR (`.xlsx`)
+- Mann–Kendall trend statistics for all indices (`.csv`, `.gpkg`) *(optional)*
+
+---
+
+### `run_precipitation_indices_workflow()`
+
+Computes ETCCDI precipitation extreme indices from daily or sub-daily precipitation data.
+
+**Outputs**
+
+- Daily aggregated precipitation (`.csv`)
+- Rx1day (`.xlsx`)
+- Rx5day (`.xlsx`)
+- SDII (`.xlsx`)
+- R10mm (`.xlsx`)
+- R20mm (`.xlsx`)
+- CDD (`.xlsx`)
+- CWD (`.xlsx`)
+- PRCPTOT (`.xlsx`)
+- Mann–Kendall trend statistics for all indices (`.csv`, `.gpkg`) *(optional)*
+
+
+Depending on the selected workflow, HydroTrends generates:
+
+- CSV files
+- Excel workbooks
+- GeoPackage layers
+- Trend statistics
+- Climate extreme indices
+
+
