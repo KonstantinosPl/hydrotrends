@@ -1,15 +1,21 @@
-# HydroTrends
+HydroTrends
 
-HydroTrends is a Python package for hydroclimatic trend analysis from gridded climate datasets.
+HydroTrends is an open-source Python package for hydroclimatic trend analysis of gridded climate datasets. It provides tools for polygon-based spatial aggregation, temporal aggregation, climate extreme indices, and non-parametric trend analysis using the Mann–Kendall test.
 
-It includes tools for:
+The package is designed for reproducible hydroclimatic analyses at different spatial scales, such as river basins, water districts, catchments, or any user-defined polygon layer.
 
-- spatial aggregation over polygons
-- monthly, seasonal, and annual summaries
-- Mann-Kendall trend analysis
-- precipitation and temperature climate indices
 
-## Status
+```python
+from hydrotrends import run_trend_workflow
 
-Early development.
+variable_paths = [
+    precipitation_monthly_path,
+    temperature_monthly_path,
+]
 
+run_trend_workflow(
+    variable_paths=variable_paths,
+    shapefiles=shapefiles,
+    output_dir="outputs",
+)
+```
