@@ -43,6 +43,20 @@ ETCCDI-based Climate Extreme Indices:
 - Spatial outputs (GeoPackage)
 
 
+## Installation
+Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/hydrotrends.git
+cd hydrotrends
+```
+
+Install the package:
+
+```bash
+pip install -e .
+```
+
 
 
 ## Example 
