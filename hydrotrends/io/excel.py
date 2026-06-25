@@ -1,6 +1,6 @@
 import pandas as pd
 
-from hydrotrends.climatology.seasons import MONTHS
+from hydrotrends.calendar.constants import MONTHS_ORDER
 
 def save_annual_excel(df, value_col, output_path):
     annual_wide = df.pivot(
@@ -21,7 +21,7 @@ def save_monthly_excel(df, value_col, output_path):
                 values=value_col
             )
 
-            monthly_wide = monthly_wide.reindex(columns=list(MONTHS.values()))
+            monthly_wide = monthly_wide.reindex(columns=MONTHS_ORDER)
             monthly_wide.to_excel(
                 writer,
                 sheet_name=str(district)[:31]

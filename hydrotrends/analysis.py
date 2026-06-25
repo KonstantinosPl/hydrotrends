@@ -10,7 +10,7 @@ import pandas as pd
 
 import pymannkendall as mk
 
-from hydrotrends.climatology.seasons import MONTHS, SEASONS, SEASONS_ORDER
+from hydrotrends.calendar.constants import MONTHS, MONTHS_ORDER, SEASONS, SEASONS_ORDER
 from hydrotrends.aggregation.polygon_aggregation import apply_weightmap
 from hydrotrends.io.excel import save_grouped_excel
 from hydrotrends.io.load import load_dataset
@@ -136,10 +136,9 @@ def aggregate_monthly(input_file, shapefile_path, output_folder, time_dim=None, 
     monthly_grouped = ((monthly.groupby(["name", "month", "year"], as_index=False).agg(monthly=(var_name, agg_function))).round(2))
     monthly_grouped["month_name"] = monthly_grouped["month"].map(MONTHS)  
     monthly_grouped = monthly_grouped.sort_values(["name", "month"])
-    month_order = list(MONTHS.values())
     monthly_grouped["month_name"] = pd.Categorical(
         monthly_grouped["month_name"],
-        categories=month_order,
+        categories=MONTHS_ORDER,
         ordered=True
     )
 

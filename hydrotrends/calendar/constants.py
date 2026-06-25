@@ -12,6 +12,7 @@ MONTHS = {
     11: "Nov",
     12: "Dec",
 }
+MONTHS_ORDER = list(MONTHS.values())
 
 SEASONS = {
     12: "DJF", 1: "DJF", 2: "DJF",

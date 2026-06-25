@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from hydrotrends.climatology.seasons import MONTHS
+from hydrotrends.calendar.constants import MONTHS
 from hydrotrends.io.excel import save_monthly_excel, save_annual_excel
 
 def precipitation_extreme_indices(input_file_path, output_dir, time_dim=None):
