@@ -5,6 +5,46 @@ HydroTrends is an open-source Python package for hydroclimatic trend analysis of
 The package is designed for reproducible hydroclimatic analyses at different spatial scales, such as river basins, water districts, catchments, or any user-defined polygon layer.
 
 
+## Features
+
+### Spatial Analysis
+- Polygon-based and pixel-weighted aggregation using xagg tool
+- Area-weighted statistics
+- Any polygon layer 
+
+### Temporal Aggregation
+- Daily
+- Monthly
+- Seasonal
+- Annual
+
+### Climate Indices
+ETCCDI-based Climate Extreme Indices:
+
+    **Temperature** 
+        - SU
+        - TXx
+        - TNx
+        - DTR
+    
+    **Precipitation**
+        - Rx1Day
+        - Rx5Day
+        - SDII
+        - R10mm
+        - R20mm
+        - CDD
+        - CWD
+        - PRCPTOT
+
+### Trend analysis
+- Mann Kendall Test
+- Sen's Slope
+- Spatial outputs (GeoPackage)
+
+
+
+
 ## Example 
 
 ```python
