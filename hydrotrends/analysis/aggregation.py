@@ -9,7 +9,7 @@ import pandas as pd
 from hydrotrends.calendar.constants import MONTHS, MONTHS_ORDER, SEASONS, SEASONS_ORDER
 from hydrotrends.aggregation.polygon_aggregation import apply_weightmap
 from hydrotrends.io.excel import save_grouped_excel
-from hydrotrends.io.load import load_dataset
+from hydrotrends.io.load import _load_dataset
 
 def _infer_time_step(df, time_dim):
     time_values = pd.to_datetime(df[time_dim]).sort_values()
@@ -104,7 +104,7 @@ def aggregate_monthly(input_file, shapefile_path, output_folder, time_dim=None, 
 
     shapefile = gpd.read_file(shapefile_path)
 
-    data, data_array = load_dataset(input_file)
+    data, data_array = _load_dataset(input_file)
 
     var_name = data_array.name  # Retrieve the variable name of the grib e.g. tp, t2m
 

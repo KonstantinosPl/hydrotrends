@@ -6,7 +6,6 @@ __version__ = "0.1.0"
 
 from hydrotrends.analysis.aggregation import (
     aggregate_monthly,
-    mann_kendall_test,
     aggregate_daily,
 )
 
@@ -22,7 +21,7 @@ from hydrotrends.extreme_climate_indices.precipitation import (
     precipitation_extreme_indices,
 )
 
-from hydrotrends.workflows import (
+from hydrotrends.workflows.workflows import (
     run_trend_workflow,
     run_temperature_indices_workflow, 
     run_precipitation_indices_workflow

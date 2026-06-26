@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import xagg as xa
 import geopandas as gpd
 
-from hydrotrends.io.load import load_dataset
+from hydrotrends.io.load import _load_dataset
 
 def apply_weightmap(data_array, shapefile):
     xa.set_options(silent=True)
@@ -41,7 +41,7 @@ def save_weightmap_plots(weightmap, data_array, shapefile, output_folder):
 def create_weightmap_plots(filepath, shapefile_path, save_plots=False, plot_output_dir=None):
 
     polygons = gpd.read_file(shapefile_path)
-    _, data_array = load_dataset(filepath)
+    _, data_array = _load_dataset(filepath)
     overlay, weightmap = apply_weightmap(data_array, polygons)
     
     if save_plots:
