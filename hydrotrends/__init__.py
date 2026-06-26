@@ -4,10 +4,14 @@ HydroTrends: hydroclimatic trend analysis tools.
 
 __version__ = "0.1.0"
 
-from hydrotrends.analysis import (
+from hydrotrends.analysis.aggregation import (
     aggregate_monthly,
     mann_kendall_test,
     aggregate_daily,
+)
+
+from hydrotrends.analysis.trends import (
+    mann_kendall_test
 )
 
 from hydrotrends.extreme_climate_indices.temperature import (

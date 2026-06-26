@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from hydrotrends.analysis import aggregate_daily, aggregate_monthly, mann_kendall_test
+from hydrotrends.analysis.aggregation import aggregate_daily, aggregate_monthly
+from hydrotrends.analysis.trends import mann_kendall_test
 from hydrotrends.extreme_climate_indices.temperature import temperature_extreme_indices
 from hydrotrends.extreme_climate_indices.precipitation import precipitation_extreme_indices
 
