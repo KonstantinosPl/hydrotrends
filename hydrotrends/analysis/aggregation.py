@@ -145,8 +145,9 @@ def aggregate_monthly(input_file, shapefile_path, output_folder, time_dim=None, 
         .agg(annual=(var_name, agg_function))
         .round(2)
     )
-    annual_wide = (annual.pivot(index="name", columns="year", values="annual"))
+    annual_wide = annual.pivot(index="name", columns="year", values="annual")
     annual_wide["mean"] = annual_wide.mean(axis=1)
+    annual_wide = annual_wide.reset_index()
 
     monthly["season"] = monthly["month"].map(SEASONS)
     monthly["season_year"] = monthly["year"]
@@ -192,5 +193,14 @@ def aggregate_monthly(input_file, shapefile_path, output_folder, time_dim=None, 
         column_order=SEASONS_ORDER,
     )
             
-    annual_wide.to_excel(output_folder_annual /f"annual_{var_name}.xlsx")   
-    return var_name
+    annual_wide.to_excel(output_folder_annual /f"annual_{var_name}.xlsx") 
+
+    seasonal_dict = {
+        name: group.pivot(
+            index="season_year",
+            columns="season",
+            values="seasonal"
+        ).reset_index()
+        for name, group in seasonal_grouped.groupby("name")
+    }  
+    return var_name, annual_wide, seasonal_dict

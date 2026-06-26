@@ -4,6 +4,7 @@ from hydrotrends.analysis.aggregation import aggregate_daily, aggregate_monthly
 from hydrotrends.analysis.trends import mann_kendall_test
 from hydrotrends.extreme_climate_indices.temperature import temperature_extreme_indices
 from hydrotrends.extreme_climate_indices.precipitation import precipitation_extreme_indices
+from hydrotrends.plots.plots import plot_annual_means, plot_seasonal_means
 
 def run_trend_workflow(
     variable_paths,
@@ -21,7 +22,7 @@ def run_trend_workflow(
             
             region_output_dir = output_dir / region_name
 
-            var_name = aggregate_monthly(
+            var_name, annual, seasonal = aggregate_monthly(
                 input_file=input_file,
                 shapefile_path=shapefile_path,
                 output_folder=region_output_dir,
@@ -29,23 +30,32 @@ def run_trend_workflow(
                 unit_conversions=unit_conversions
             )
 
+            plot_annual_means(
+                data=annual, 
+                var_name=var_name, 
+                output_dir=region_output_dir
+            )
+            plot_seasonal_means(
+                data=seasonal,
+                var_name=var_name,
+                output_dir=region_output_dir
+            )
+
             for mode in modes:
+                mk_input_file = (
+                    region_output_dir
+                    / var_name
+                    / mode
+                    / f"{mode}_{var_name}.xlsx"
+                )
 
-                 for mode in modes:
-                    mk_input_file = (
-                        region_output_dir
-                        / var_name
-                        / mode
-                        / f"{mode}_{var_name}.xlsx"
-                    )
-
-                    mann_kendall_test(
-                        input_file=mk_input_file,
-                        shapefile_path=shapefile_path,
-                        output_folder=region_output_dir,
-                        var_name=var_name,
-                        mode=mode,
-                    )
+                mann_kendall_test(
+                    input_file=mk_input_file,
+                    shapefile_path=shapefile_path,
+                    output_folder=region_output_dir,
+                    var_name=var_name,
+                    mode=mode,
+                )
     return
 
 TEMPERATURE_INDICES = [
